@@ -1,5 +1,5 @@
 import { View, Text, Dimensions, ActivityIndicator, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native'
-import React, { useState } from 'react'
+import React, {useRef, useState} from 'react'
 import { router, useLocalSearchParams } from "expo-router";
 import { useAppwrite } from "@/lib/useAppwrite";
 import { getPropertyById } from "@/lib/appwrite";
@@ -7,6 +7,7 @@ import NoResult from "@/components/NoResult";
 import Currency from "@/components/Currency";
 import icons from "@/constants/icons";
 import images from "@/constants/images";
+import Swiper from "react-native-swiper";
 
 const Property = () => {
     const { id } = useLocalSearchParams<{ id?: string }>();
@@ -17,7 +18,8 @@ const Property = () => {
         },
     });
 
-    const [ reviewItemsToShow, setReviewItemsToShow ] = useState<number>(1)
+    const [ reviewItemsToShow, setReviewItemsToShow ] = useState<number>(1);
+    const swiperRef = useRef<Swiper>(null);
 
     const windowHeight: number = Dimensions.get("window").height;
 
@@ -73,7 +75,26 @@ const Property = () => {
         <View>
             <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-20 bg-white">
                 <View className="relative w-full" style={{ height: windowHeight / 2 }}>
-                    <Image source={{ uri: data.image }} className="size-full" resizeMode="cover" />
+                    {
+                        data.gallery && data.gallery.length > 0 && (
+                            <Swiper ref={swiperRef}
+                                    loop={true}
+                                    dot={<View className="w-3 h-1 mx-1 rounded-full bg-accent-100" />}
+                                    activeDot={<View className="w-3 h-1 rounded-full mx-1 bg-primary-300" />}>
+                                {
+                                    [{ image: data.image }].concat(data.gallery).map((item: any, index: number) => (
+                                        <Image key={index} source={{ uri: item.image }} className="size-full" resizeMode="cover" />
+                                    ))
+                                }
+                            </Swiper>
+                        )
+                    }
+                    {
+                        (!data.gallery || data.gallery.length == 0) && (
+                            <Image source={{ uri: data.image }} className="size-full" resizeMode="cover" />
+                        )
+                    }
+
                     {/* Gradient image has rounded border in top left, so moving image by 40 point up to hide that */}
                     <Image source={images.whiteGradient} className="absolute width-full z-40" style={{ top: -40 }} />
                 </View>
