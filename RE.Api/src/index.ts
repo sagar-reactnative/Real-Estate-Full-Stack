@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import { PORT } from './config/env';
 import { ConsoleHelpers } from "./helpers/console-helpers";
 import { connectDatabase, seedDatabase } from "./database/database";
+import propertyRoutes from "./routes/property.routes";
 
 const app: Express = express();
 
@@ -18,6 +19,8 @@ app.get("/seed-database", async (req: Request, res: Response) => {
         infoMessage: "Database Seed Completed."
     });
 });
+
+app.use("/api/v1/properties", propertyRoutes);
 
 app.listen(PORT, async (): Promise<void> => {
     await connectDatabase();
