@@ -15,39 +15,25 @@ const FacilitySchema = new mongoose.Schema<IFacility>({
         type: mongoose.Schema.Types.String,
         required: true,
         trim: true,
-        maxlength: 50,
+        maxlength: 50
     }
 });
 
-FacilitySchema.pre<IFacility>('save', async function (next) {
-    switch (this.facility_type) {
-        case "Laundry":
-            this.title = "Laundry";
-            break;
-        case "Parking":
-            this.title = "Parking";
-            break;
-        case "Sports-Center":
-            this.title = "Sports Center";
-            break;
-        case "Cutlery":
-            this.title = "Cutlery";
-            break;
-        case "Gym":
-            this.title = "Gym";
-            break;
-        case "Swimming-pool":
-            this.title = "Swimming pool";
-            break;
-        case "Wifi":
-            this.title = "Wifi";
-            break;
-        case "Pet-Friendly":
-            this.title = "Pet-Friendly";
-            break;
-        default:
-            break;
-    }
+FacilitySchema.pre<IFacility>('validate', async function (next) {
+    const titles: Record<string, string> = {
+        "Laundry": "Laundry",
+        "Parking": "Parking",
+        "Sports-Center": "Sports Center",
+        "Cutlery": "Cutlery",
+        "Gym": "Gym",
+        "Swimming-pool": "Swimming Pool",
+        "Wifi": "Wifi",
+        "Pet-Friendly": "Pet-Friendly"
+    };
+
+    this.title = titles[this.facility_type] || this.facility_type;
+
+    next();
 });
 
 

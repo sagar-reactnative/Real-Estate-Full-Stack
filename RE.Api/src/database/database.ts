@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
 import moment from "moment/moment";
 import { MONGO_DB_URI } from '../config/env';
 import { ConsoleHelpers } from "../helpers/console-helpers";
@@ -32,25 +31,24 @@ const seedDatabase = async (): Promise<void> => {
         await Property.deleteMany();
 
         // Seed Users
-        const hashedPassword: string = await bcrypt.hash("test", 10);
-        const users = await User.insertMany([
-            { firstName: "John", lastName: "Doe", email: "john.doe@example.com", password: hashedPassword, role: "agent", avatar: "https://randomuser.me/api/portraits/men/1.jpg" },
-            { firstName: "Jane", lastName: "Smith", email: "jane.smith@example.com", password: hashedPassword, role: "user", avatar: "https://randomuser.me/api/portraits/women/1.jpg" },
-            { firstName: "Alice", lastName: "Brown", email: "alice.brown@example.com", password: hashedPassword, role: "user", avatar: "https://randomuser.me/api/portraits/women/2.jpg" },
-            { firstName: "Bob", lastName: "Miller", email: "bob.miller@example.com", password: hashedPassword, role: "user", avatar: "https://randomuser.me/api/portraits/men/2.jpg" },
-            { firstName: "Charlie", lastName: "Davis", email: "charlie.davis@example.com", password: hashedPassword, role: "agent", avatar: "https://randomuser.me/api/portraits/men/3.jpg" },
-            { firstName: "Diana", lastName: "Wilson", email: "diana.wilson@example.com", password: hashedPassword, role: "agent", avatar: "https://randomuser.me/api/portraits/women/3.jpg" },
-            { firstName: "Edward", lastName: "Thomas", email: "edward.thomas@example.com", password: hashedPassword, role: "agent", avatar: "https://randomuser.me/api/portraits/men/4.jpg" }
+        const users = await User.create([
+            { firstName: "John", lastName: "Doe", email: "john.doe@example.com", password: "test", role: "agent", avatar: "https://randomuser.me/api/portraits/men/1.jpg" },
+            { firstName: "Jane", lastName: "Smith", email: "jane.smith@example.com", password: "test", role: "user", avatar: "https://randomuser.me/api/portraits/women/1.jpg" },
+            { firstName: "Alice", lastName: "Brown", email: "alice.brown@example.com", password: "test", role: "user", avatar: "https://randomuser.me/api/portraits/women/2.jpg" },
+            { firstName: "Bob", lastName: "Miller", email: "bob.miller@example.com", password: "test", role: "user", avatar: "https://randomuser.me/api/portraits/men/2.jpg" },
+            { firstName: "Charlie", lastName: "Davis", email: "charlie.davis@example.com", password: "test", role: "agent", avatar: "https://randomuser.me/api/portraits/men/3.jpg" },
+            { firstName: "Diana", lastName: "Wilson", email: "diana.wilson@example.com", password: "test", role: "agent", avatar: "https://randomuser.me/api/portraits/women/3.jpg" },
+            { firstName: "Edward", lastName: "Thomas", email: "edward.thomas@example.com", password: "test", role: "agent", avatar: "https://randomuser.me/api/portraits/men/4.jpg" }
         ]);
 
         // Seed Facilities
-        const facilities = await Facility.insertMany([
-            { facility_type: "Laundry", title: "Laundry" },
-            { facility_type: "Parking", title: "Parking" },
-            { facility_type: "Gym", title: "Gym" },
-            { facility_type: "Swimming-pool", title: "Swimming Pool" },
-            { facility_type: "Wifi", title: "Wifi" },
-            { facility_type: "Pet-Friendly", title: "Pet-Friendly" }
+        const facilities = await Facility.create([
+            { facility_type: "Laundry" },
+            { facility_type: "Parking" },
+            { facility_type: "Gym" },
+            { facility_type: "Swimming-pool" },
+            { facility_type: "Wifi" },
+            { facility_type: "Pet-Friendly" }
         ]);
 
         // Seed Properties
@@ -82,7 +80,7 @@ const seedDatabase = async (): Promise<void> => {
             });
         }
 
-        await Property.insertMany(propertiesData);
+        await Property.create(propertiesData);
 
         ConsoleHelpers.logSuccessMessage("Database", "Database seeding completed successfully.");
     }
