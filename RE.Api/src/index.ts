@@ -1,12 +1,25 @@
 import express, { Express, Request, Response } from 'express';
 import { PORT } from './config/env';
+import { ConsoleHelpers } from "./helpers/console-helpers";
+import { connectDatabase, seedDatabase } from "./database/database";
 
 const app: Express = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, TypeScript Express!');
+    res.send('Welcome to Real Estate Full Stack API');
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+app.get("/seed-database", async (req: Request, res: Response) => {
+    await seedDatabase();
+    res.json({
+        infoMessage: "Database Seed Completed."
+    });
+});
+
+app.listen(PORT, async (): Promise<void> => {
+    await connectDatabase();
+    ConsoleHelpers.logMessage("Index", `Server running at http://localhost:${PORT}`);
 });
