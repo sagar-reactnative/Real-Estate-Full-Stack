@@ -43,9 +43,11 @@ const ReviewSchema = new mongoose.Schema<IReview>({
 interface IProperty extends Document {
     title: string;
     description: string;
+    address: string;
     sqft: number;
     beds?: number;
-    baths?: number
+    baths?: number;
+    price: number;
     images: IImage[];
     reviews: IReview[];
     facilities: mongoose.Schema.Types.ObjectId[];
@@ -66,6 +68,13 @@ const PropertySchema = new mongoose.Schema<IProperty>({
         minlength: 20,
         maxlength: 1000
     },
+    address: {
+        type: mongoose.Schema.Types.String,
+        required: true,
+        trim: true,
+        minlength: 5,
+        maxlength: 100
+    },
     sqft: {
         type: mongoose.Schema.Types.Number,
         required: true
@@ -77,6 +86,10 @@ const PropertySchema = new mongoose.Schema<IProperty>({
     baths: {
         type: mongoose.Schema.Types.Number,
         required: false
+    },
+    price: {
+        type: mongoose.Schema.Types.Number,
+        required: true
     },
     images: [ ImageSchema ],
     reviews: [ ReviewSchema ],

@@ -1,6 +1,7 @@
 export interface PropertyDetailModel {
     title: string;
     description: string;
+    address: string;
     sqft: number;
     beds?: number;
     baths?: number;
