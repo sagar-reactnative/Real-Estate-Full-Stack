@@ -147,7 +147,7 @@ const Property = () => {
         <View className="p-5">
           <View className="mb-5">
             <Text className="font-rubik-extrabold text-2xl mb-5">
-              {data.name}
+              {data.name} Test
             </Text>
             <View className="flex flex-row items-center gap-3 mb-5">
               <View className="px-4 py-2 bg-primary-200 rounded-full">
