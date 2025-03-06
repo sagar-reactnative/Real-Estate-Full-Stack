@@ -5,15 +5,18 @@ import { PropertyDetailModel } from '../models/property/property-detail.model';
 import { PropertyListModel } from '../models/property/property-list.model';
 
 const getLatest = async (req: Request, res: Response) => {
-    const properties = await Property.find().sort({ createdAt: -1 }).limit(5);
+    const properties = await Property.find().populate('reviews').sort({ createdAt: -1 }).limit(5);
 
     const mappedProperties: PropertyListModel[] = properties.map(property => {
         const images: string[] = property.images.map(image => image.url);
+
         const mappedProperty: PropertyListModel = {
+            id: property.id,
             title: property.title,
             address: property.address,
             imageUrl: images.length > 0 ? images[0] : null,
-            price: property.price
+            price: property.price,
+            averageRating: property.reviews.reduce((sum, item) => sum + item.rating, 0) / property.reviews.length
         };
 
         return mappedProperty;
@@ -52,9 +55,11 @@ const getById = async (req: Request, res: Response) => {
     }
 
     const mappedProperty: PropertyDetailModel = {
+        id: property.id,
         title: property.title,
         description: property.description,
         address: property.address,
+        averageRating: property.reviews.reduce((sum, item) => sum + item.rating, 0) / property.reviews.length,
         sqft: property.sqft,
         beds: property.beds,
         baths: property.baths,
