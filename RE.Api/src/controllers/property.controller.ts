@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
+import { Request, Response } from 'express';
 import { Property } from '../database/models/property.model';
-import { ApiResponse } from '../models/api-response.model';
 import { PropertyDetailModel } from '../models/property/property-detail.model';
 import { PropertyListModel } from '../models/property/property-list.model';
 
-const getLatest = async (): Promise<ApiResponse<PropertyListModel[]>> => {
+const getLatest = async (req: Request, res: Response) => {
     const properties = await Property.find().sort({ createdAt: -1 }).limit(5);
 
     const mappedProperties: PropertyListModel[] = properties.map(property => {
@@ -19,18 +19,22 @@ const getLatest = async (): Promise<ApiResponse<PropertyListModel[]>> => {
         return mappedProperty;
     });
 
-    return {
-        statusCode: 200,
+    res.status(200).json({
+        success: true,
         data: mappedProperties
-    };
+    });
 };
 
-const getById = async (propertyId: string): Promise<ApiResponse<PropertyDetailModel>> => {
+const getById = async (req: Request, res: Response) => {
+    const propertyId = req.params.id;
+
     if (!mongoose.Types.ObjectId.isValid(propertyId)) {
-        return {
-            statusCode: 400,
+        res.status(400).json({
+            success: false,
             errorMessages: ['Invalid property ID.']
-        };
+        });
+
+        return;
     }
 
     const property = await Property.findById(propertyId)
@@ -39,10 +43,12 @@ const getById = async (propertyId: string): Promise<ApiResponse<PropertyDetailMo
         .populate('facilities', 'facility_type title');
 
     if (!property) {
-        return {
-            statusCode: 404,
+        res.status(404).json({
+            success: false,
             errorMessages: ['Property not found.']
-        };
+        });
+
+        return;
     }
 
     const mappedProperty: PropertyDetailModel = {
@@ -80,10 +86,10 @@ const getById = async (propertyId: string): Promise<ApiResponse<PropertyDetailMo
         }
     };
 
-    return {
-        data: mappedProperty,
-        statusCode: 200
-    };
+    res.status(200).json({
+        success: true,
+        data: mappedProperty
+    });
 };
 
 export const PropertyController = {
