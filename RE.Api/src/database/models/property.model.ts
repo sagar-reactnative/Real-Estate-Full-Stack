@@ -1,7 +1,7 @@
-import mongoose, { Document } from "mongoose";
-import moment from "moment/moment";
+import mongoose, { Document } from 'mongoose';
+import moment from 'moment/moment';
 
-interface IImage extends Document{
+interface IImage extends Document {
     url: string;
 }
 const ImageSchema = new mongoose.Schema<IImage>({
@@ -15,7 +15,7 @@ interface IReview extends Document {
     user: mongoose.Schema.Types.ObjectId;
 }
 const ReviewSchema = new mongoose.Schema<IReview>({
-    rating : {
+    rating: {
         type: mongoose.Schema.Types.Number,
         required: true,
         min: 1,
@@ -91,8 +91,8 @@ const PropertySchema = new mongoose.Schema<IProperty>({
         type: mongoose.Schema.Types.Number,
         required: true
     },
-    images: [ ImageSchema ],
-    reviews: [ ReviewSchema ],
+    images: [ImageSchema],
+    reviews: [ReviewSchema],
     facilities: [
         {
             type: mongoose.Schema.Types.ObjectId,

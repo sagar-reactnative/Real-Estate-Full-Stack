@@ -1,15 +1,13 @@
-import mongoose from "mongoose";
-import { Property } from "../database/models/property.model";
-import { ApiResponse } from "../models/api-response.model";
-import { PropertyDetailModel } from "../models/property/property-detail.model";
-import { PropertyListModel } from "../models/property/property-list.model";
+import mongoose from 'mongoose';
+import { Property } from '../database/models/property.model';
+import { ApiResponse } from '../models/api-response.model';
+import { PropertyDetailModel } from '../models/property/property-detail.model';
+import { PropertyListModel } from '../models/property/property-list.model';
 
 const getLatest = async (): Promise<ApiResponse<PropertyListModel[]>> => {
-    const properties = await Property.find()
-        .sort({ createdAt: -1 })
-        .limit(5);
+    const properties = await Property.find().sort({ createdAt: -1 }).limit(5);
 
-    const mappedProperties: PropertyListModel[] = properties.map((property) => {
+    const mappedProperties: PropertyListModel[] = properties.map(property => {
         const images: string[] = property.images.map(image => image.url);
         const mappedProperty: PropertyListModel = {
             title: property.title,
@@ -23,27 +21,27 @@ const getLatest = async (): Promise<ApiResponse<PropertyListModel[]>> => {
 
     return {
         statusCode: 200,
-        data: mappedProperties,
+        data: mappedProperties
     };
-}
+};
 
 const getById = async (propertyId: string): Promise<ApiResponse<PropertyDetailModel>> => {
     if (!mongoose.Types.ObjectId.isValid(propertyId)) {
         return {
             statusCode: 400,
-            errorMessages: [ "Invalid property ID." ]
+            errorMessages: ['Invalid property ID.']
         };
     }
 
     const property = await Property.findById(propertyId)
-        .populate("agent", "firstName lastName email avatar")
-        .populate("reviews.user")
-        .populate("facilities", "facility_type title");
+        .populate('agent', 'firstName lastName email avatar')
+        .populate('reviews.user')
+        .populate('facilities', 'facility_type title');
 
     if (!property) {
         return {
             statusCode: 404,
-            errorMessages: [ "Property not found." ]
+            errorMessages: ['Property not found.']
         };
     }
 
@@ -66,7 +64,7 @@ const getById = async (propertyId: string): Promise<ApiResponse<PropertyDetailMo
                     email: (review.user as any).email,
                     avatar: (review.user as any).avatar
                 }
-            }
+            };
         }),
         facilities: property.facilities.map(facility => {
             return {
@@ -91,4 +89,4 @@ const getById = async (propertyId: string): Promise<ApiResponse<PropertyDetailMo
 export const PropertyController = {
     getLatest,
     getById
-}
+};

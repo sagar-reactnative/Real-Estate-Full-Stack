@@ -1,12 +1,12 @@
-import mongoose, { Document } from "mongoose";
-import bcrypt from "bcrypt";
+import mongoose, { Document } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 interface IUser extends Document {
     firstName: string;
     lastName?: string;
     email: string;
     password: string;
-    role: "user" | "agent";
+    role: 'user' | 'agent';
     avatar: string;
 }
 
@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema<IUser>({
     role: {
         type: mongoose.Schema.Types.String,
         required: true,
-        enum: [ "user", "agent" ]
+        enum: ['user', 'agent']
     },
     avatar: {
         type: mongoose.Schema.Types.String,
@@ -52,8 +52,7 @@ UserSchema.pre<IUser>('save', async function (next) {
         this.password = await bcrypt.hash(this.password, salt);
 
         next();
-    }
-    catch (error: any) {
+    } catch (error: any) {
         next(error);
     }
 });

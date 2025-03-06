@@ -15,16 +15,16 @@ export interface PropertyDetailModel {
             lastName: string;
             email: string;
             avatar: string;
-        }
+        };
     }[];
     facilities: {
         title: string;
         type: string;
-    }[],
+    }[];
     agent: {
         firstName: string;
         lastName: string;
         email: string;
         avatar: string;
-    }
-};
+    };
+}

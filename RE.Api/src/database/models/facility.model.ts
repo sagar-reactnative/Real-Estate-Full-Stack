@@ -1,14 +1,14 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document } from 'mongoose';
 
 interface IFacility extends Document {
-    facility_type: "Laundry" | "Parking" | "Sports-Center" | "Cutlery" | "Gym" | "Swimming-pool" | "Wifi" | "Pet-Friendly";
+    facility_type: 'Laundry' | 'Parking' | 'Sports-Center' | 'Cutlery' | 'Gym' | 'Swimming-pool' | 'Wifi' | 'Pet-Friendly';
     title: string;
 }
 
 const FacilitySchema = new mongoose.Schema<IFacility>({
     facility_type: {
         type: mongoose.Schema.Types.String,
-        enum: ["Laundry", "Parking", "Sports-Center", "Cutlery", "Gym", "Swimming-pool", "Wifi", "Pet-Friendly"],
+        enum: ['Laundry', 'Parking', 'Sports-Center', 'Cutlery', 'Gym', 'Swimming-pool', 'Wifi', 'Pet-Friendly'],
         required: true
     },
     title: {
@@ -21,14 +21,14 @@ const FacilitySchema = new mongoose.Schema<IFacility>({
 
 FacilitySchema.pre<IFacility>('validate', async function (next) {
     const titles: Record<string, string> = {
-        "Laundry": "Laundry",
-        "Parking": "Parking",
-        "Sports-Center": "Sports Center",
-        "Cutlery": "Cutlery",
-        "Gym": "Gym",
-        "Swimming-pool": "Swimming Pool",
-        "Wifi": "Wifi",
-        "Pet-Friendly": "Pet-Friendly"
+        Laundry: 'Laundry',
+        Parking: 'Parking',
+        'Sports-Center': 'Sports Center',
+        Cutlery: 'Cutlery',
+        Gym: 'Gym',
+        'Swimming-pool': 'Swimming Pool',
+        Wifi: 'Wifi',
+        'Pet-Friendly': 'Pet-Friendly'
     };
 
     this.title = titles[this.facility_type] || this.facility_type;
@@ -36,8 +36,6 @@ FacilitySchema.pre<IFacility>('validate', async function (next) {
     next();
 });
 
-
 const Facility = mongoose.model<IFacility>('Facility', FacilitySchema);
 
 export { IFacility, Facility };
-
