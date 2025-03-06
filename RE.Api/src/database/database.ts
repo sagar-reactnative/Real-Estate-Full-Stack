@@ -105,9 +105,11 @@ const seedDatabase = async (): Promise<void> => {
             propertiesData.push({
                 title: `Property ${i}`,
                 description: `Beautiful property ${i} with modern amenities and a great location.`,
+                address: `12${i} Park Avanue St`,
                 sqft: 1000 + i * 100,
                 beds: (i % 3) + 1,
                 baths: (i % 2) + 1,
+                price: ((i % 3) + 1) * 10000,
                 images: [{ url: `https://source.unsplash.com/400x300/?house,${i}` }],
                 reviews: [
                     {
