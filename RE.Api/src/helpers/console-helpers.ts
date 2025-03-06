@@ -1,14 +1,15 @@
 import moment from 'moment/moment';
 
-type sourceKeys = 'Database' | 'Index';
-type colorCodes = '\x1b[31m' | '\x1b[32m' | '\x1b[33m' | '';
+type sourceKeys = 'Database' | 'Index' | 'Logger';
+type colorCodes = '\x1b[31m' | '\x1b[32m' | '\x1b[33m' | '\x1b[0m';
 
 const source: { [key: string]: string } = {
-    Database: 'Database.ts',
-    Index: 'Index.ts'
+    Database: 'Database',
+    Index: 'Index',
+    Logger: 'Logger'
 };
 
-const getLogMessage = (sourceKey: sourceKeys, message: string, colorCode: colorCodes = ''): string => {
+const getLogMessage = (sourceKey: sourceKeys, message: string, colorCode: colorCodes = '\x1b[0m'): string => {
     const sourceText: string = source[sourceKey];
 
     // get longest source's text length

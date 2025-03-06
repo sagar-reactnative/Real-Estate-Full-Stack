@@ -3,11 +3,14 @@ import { PORT } from './config/env';
 import { ConsoleHelpers } from './helpers/console-helpers';
 import { connectDatabase, seedDatabase } from './database/database';
 import propertyRoutes from './routes/property.routes';
+import LoggingMiddleware from './middlewares/logging.middleware';
 
 const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(LoggingMiddleware);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Welcome to Real Estate Full Stack API');
