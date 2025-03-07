@@ -3,10 +3,11 @@ import { PORT } from './config/env';
 import { ConsoleHelpers } from './helpers/console-helpers';
 import { connectDatabase, seedDatabase } from './database/database';
 import helmet from 'helmet';
+import 'express-async-errors'; // this import should be before any rout declaretion
 import propertyRoutes from './routes/property.routes';
+import timestempMiddleware from './middlewares/timestemp.middleware';
 import loggingMiddleware from './middlewares/logging.middleware';
 import globalErrorMiddleware from './middlewares/global-error.middleware';
-import 'express-async-errors';
 
 const app: Express = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
 
+app.use(timestempMiddleware);
 app.use(loggingMiddleware);
 
 app.get('/', (req: Request, res: Response) => {

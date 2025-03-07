@@ -9,7 +9,7 @@ const globalErrorMiddleware: ErrorRequestHandler = async (err, req: Request, res
         message: err.message,
         method: req.method,
         url: req.baseUrl + req.url,
-        timestamp: Date.now(),
+        timestamp: req.timestamp,
         stack: err.stack
     });
 
