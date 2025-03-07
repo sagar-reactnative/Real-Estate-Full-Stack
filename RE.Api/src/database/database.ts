@@ -5,6 +5,7 @@ import { ConsoleHelpers } from '../helpers/console-helpers';
 import { User } from './models/user.model';
 import { Facility } from './models/facility.model';
 import { Property } from './models/property.model';
+import { Category } from './models/category.model';
 
 const connectDatabase = async (): Promise<void> => {
     try {
@@ -25,9 +26,10 @@ const connectDatabase = async (): Promise<void> => {
 const seedDatabase = async (): Promise<void> => {
     try {
         // Clear existing data
-        await User.deleteMany();
-        await Facility.deleteMany();
         await Property.deleteMany();
+        await Facility.deleteMany();
+        await Category.deleteMany();
+        await User.deleteMany();
 
         // Seed Users
         const users = await User.create([
@@ -99,6 +101,18 @@ const seedDatabase = async (): Promise<void> => {
             { facility_type: 'Pet-Friendly' }
         ]);
 
+        // Seed Categories
+        const categories = await Category.create([
+            { title: 'House' },
+            { title: 'Condos' },
+            { title: 'Duplexes' },
+            { title: 'Studios' },
+            { title: 'Villa' },
+            { title: 'Apartments' },
+            { title: 'Townhomes' },
+            { title: 'Others' }
+        ]);
+
         // Seed Properties
         const propertiesData = [];
         for (let i = 1; i <= 10; i++) {
@@ -111,6 +125,7 @@ const seedDatabase = async (): Promise<void> => {
                 baths: (i % 2) + 1,
                 price: ((i % 3) + 1) * 10000,
                 images: [{ url: `https://source.unsplash.com/400x300/?house,${i}` }],
+                category: categories[Math.floor(Math.random() * categories.length)]._id,
                 reviews: [
                     {
                         rating: (i % 5) + 1,

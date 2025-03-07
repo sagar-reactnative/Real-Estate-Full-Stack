@@ -49,6 +49,7 @@ interface IProperty extends Document {
     baths?: number;
     price: number;
     images: IImage[];
+    category: mongoose.Schema.Types.ObjectId;
     reviews: IReview[];
     facilities: mongoose.Schema.Types.ObjectId[];
     agent: mongoose.Schema.Types.ObjectId;
@@ -92,6 +93,11 @@ const PropertySchema = new mongoose.Schema<IProperty>({
         required: true
     },
     images: [ImageSchema],
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    },
     reviews: [ReviewSchema],
     facilities: [
         {
