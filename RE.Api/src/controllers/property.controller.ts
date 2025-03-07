@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { Property } from '../database/models/property.model';
 import { PropertyDetailModel } from '../models/property/property-detail.model';
 import { PropertyListModel } from '../models/property/property-list.model';
+import { AgentDetailModel } from '../models/agent/agent-detail.model';
 
 const getLatest = async (req: Request, res: Response) => {
     const properties = await Property.find().populate('reviews').sort({ createdAt: -1 }).limit(5);
@@ -42,6 +43,7 @@ const getById = async (req: Request, res: Response) => {
 
     const property = await Property.findById(propertyId)
         .populate('agent', 'firstName lastName email avatar')
+        .populate('category', 'id title')
         .populate('reviews.user')
         .populate('facilities', 'facility_type title');
 
@@ -63,38 +65,49 @@ const getById = async (req: Request, res: Response) => {
         sqft: property.sqft,
         beds: property.beds,
         baths: property.baths,
-        images: property.images.map(image => image.url),
+        images: property.images.map(image => {
+            return {
+                id: image.id,
+                url: image.url
+            };
+        }),
+        category: {
+            id: (property.category as any).id,
+            title: (property.category as any).title
+        },
         reviews: property.reviews.map(review => {
             return {
+                id: review.id,
                 rating: review.rating,
                 text: review.text,
                 createdAt: review.createdAt,
-                user: {
-                    firstName: (review.user as any).firstName,
-                    lastName: (review.user as any).lastName,
-                    email: (review.user as any).email,
-                    avatar: (review.user as any).avatar
-                }
+                user: mapAgentObject(review.user)
             };
         }),
         facilities: property.facilities.map(facility => {
             return {
+                id: (facility as any).id,
                 title: (facility as any).title,
                 type: (facility as any).facility_type
             };
         }),
-        agent: {
-            firstName: (property.agent as any).firstName,
-            lastName: (property.agent as any).lastName,
-            email: (property.agent as any).email,
-            avatar: (property.agent as any).avatar
-        }
+        agent: mapAgentObject(property.agent)
     };
 
     res.status(200).json({
         success: true,
         data: mappedProperty
     });
+};
+
+const mapAgentObject = (agent: any): AgentDetailModel => {
+    return {
+        id: agent.id,
+        firstName: agent.firstName,
+        lastName: agent.lastName,
+        email: agent.email,
+        avatar: agent.avatar
+    };
 };
 
 export const PropertyController = {

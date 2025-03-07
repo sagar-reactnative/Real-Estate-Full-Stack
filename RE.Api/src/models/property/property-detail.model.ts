@@ -1,3 +1,5 @@
+import { AgentDetailModel } from '../agent/agent-detail.model';
+
 export interface PropertyDetailModel {
     id: string;
     title: string;
@@ -7,26 +9,25 @@ export interface PropertyDetailModel {
     sqft: number;
     beds?: number;
     baths?: number;
-    images: string[];
+    images: {
+        id: string;
+        url: string;
+    }[];
+    category: {
+        id: string;
+        title: string;
+    };
     reviews: {
+        id: string;
         rating: number;
         text?: string;
         createdAt: Date;
-        user: {
-            firstName: string;
-            lastName: string;
-            email: string;
-            avatar: string;
-        };
+        user: AgentDetailModel;
     }[];
     facilities: {
+        id: string;
         title: string;
         type: string;
     }[];
-    agent: {
-        firstName: string;
-        lastName: string;
-        email: string;
-        avatar: string;
-    };
+    agent: AgentDetailModel;
 }
