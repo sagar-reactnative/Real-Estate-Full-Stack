@@ -101,6 +101,7 @@ const getById = async (req: Request, res: Response) => {
         title: property.title,
         description: property.description,
         address: property.address,
+        price: property.price,
         averageRating: property.reviews.reduce((sum, item) => sum + item.rating, 0) / property.reviews.length,
         sqft: property.sqft,
         beds: property.beds,
